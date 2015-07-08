@@ -7,4 +7,4 @@ Author: Michael Denkowski (http://www.cs.cmu.edu/~mdenkows/, mdenkows@cs.cmu.edu
 
 Copyright: Carnegie Mellon University
 
-License: LGPL
+License: LGPL v2.1
