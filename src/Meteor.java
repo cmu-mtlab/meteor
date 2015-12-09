@@ -706,6 +706,9 @@ public class Meteor {
 			} else if (args[curArg].equals("-x")) {
 				props.setProperty("beamSize", args[curArg + 1]);
 				curArg += 2;
+			} else if (args[curArg].equals("-e")) {
+				props.setProperty("stemFile", args[curArg + 1]);
+				curArg += 2;
 			} else if (args[curArg].equals("-s")) {
 				props.setProperty("wordFile", args[curArg + 1]);
 				curArg += 2;
@@ -796,6 +799,8 @@ public class Meteor {
 		System.err
 				.println("-r refCount                     Number of references (plaintext only)");
 		System.err.println("-x beamSize                     (default 40)");
+		System.err
+				.println("-e stemFile                     (if not default for language)");
 		System.err
 				.println("-s wordListFile                 (if not default for language)");
 		System.err

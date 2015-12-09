@@ -757,6 +757,13 @@ public class Constants {
 	}
 
 	public static Stemmer newStemmer(String language) throws RuntimeException {
+		return newStemmer(language, null);
+	}
+	public static Stemmer newStemmer(String language, URL stemFileURL) throws RuntimeException {
+		// Manually specified stem file
+		if (stemFileURL != null)
+			return new LookupTableStemmer(stemFileURL);
+		// Snowball stemmers
 		if (language.equals("english"))
 			return new SnowballStemmerWrapper(new englishStemmer());
 		if (language.equals("french"))
@@ -787,6 +794,7 @@ public class Constants {
 			return new SnowballStemmerWrapper(new norwegianStemmer());
 		if (language.equals("swedish"))
 			return new SnowballStemmerWrapper(new swedishStemmer());
+		// Legacy Arabic stemmer
 		if (language.equals("arabic-buckwalter-reduced")) {
 			try {
 				return new LookupTableStemmer(new URL(

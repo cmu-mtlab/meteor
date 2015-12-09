@@ -44,72 +44,19 @@ public class Aligner {
 	public Aligner(String language, ArrayList<Integer> modules) {
 		this.beamSize = Constants.DEFAULT_BEAM_SIZE;
 		this.partialComparator = Constants.PARTIAL_COMPARE_TOTAL;
-		setupModules(language, modules, Constants.DEFAULT_WORD_DIR_URL,
+		setupModules(language, modules, null, Constants.DEFAULT_WORD_DIR_URL,
 				Constants.DEFAULT_SYN_DIR_URL,
 				Constants.getDefaultParaFileURL(Constants
 						.getLanguageID(Constants.normLanguageName(language))));
 	}
 
 	public Aligner(String language, ArrayList<Integer> modules,
-			ArrayList<Double> moduleWeights) {
-		this.beamSize = Constants.DEFAULT_BEAM_SIZE;
-		this.partialComparator = Constants.PARTIAL_COMPARE_TOTAL;
-		setupModules(language, modules, Constants.DEFAULT_WORD_DIR_URL,
-				Constants.DEFAULT_SYN_DIR_URL,
-				Constants.getDefaultParaFileURL(Constants
-						.getLanguageID(Constants.normLanguageName(language))));
-		this.moduleWeights = moduleWeights;
-	}
-
-	public Aligner(String language, ArrayList<Integer> modules,
-			ArrayList<Double> moduleWeights, int beamSize) {
-		this.beamSize = beamSize;
-		this.partialComparator = Constants.PARTIAL_COMPARE_TOTAL;
-		setupModules(language, modules, Constants.DEFAULT_WORD_DIR_URL,
-				Constants.DEFAULT_SYN_DIR_URL,
-				Constants.getDefaultParaFileURL(Constants
-						.getLanguageID(Constants.normLanguageName(language))));
-		this.moduleWeights = moduleWeights;
-	}
-
-	public Aligner(String language, ArrayList<Integer> modules,
-			ArrayList<Double> moduleWeights, int beamSize, URL wordFileURL) {
-		this.beamSize = beamSize;
-		this.partialComparator = Constants.PARTIAL_COMPARE_TOTAL;
-		setupModules(language, modules, wordFileURL,
-				Constants.DEFAULT_SYN_DIR_URL,
-				Constants.getDefaultParaFileURL(Constants
-						.getLanguageID(Constants.normLanguageName(language))));
-		this.moduleWeights = moduleWeights;
-	}
-
-	public Aligner(String language, ArrayList<Integer> modules,
-			ArrayList<Double> moduleWeights, int beamSize, URL wordFileURL,
-			URL synDirURL) {
-		this.beamSize = beamSize;
-		this.partialComparator = Constants.PARTIAL_COMPARE_TOTAL;
-		setupModules(language, modules, wordFileURL, synDirURL,
-				Constants.getDefaultParaFileURL(Constants
-						.getLanguageID(Constants.normLanguageName(language))));
-		this.moduleWeights = moduleWeights;
-	}
-
-	public Aligner(String language, ArrayList<Integer> modules,
-			ArrayList<Double> moduleWeights, int beamSize, URL wordFileURL,
-			URL synDirURL, URL paraDirURL) {
-		this.beamSize = beamSize;
-		this.partialComparator = Constants.PARTIAL_COMPARE_TOTAL;
-		setupModules(language, modules, wordFileURL, synDirURL, paraDirURL);
-		this.moduleWeights = moduleWeights;
-	}
-
-	public Aligner(String language, ArrayList<Integer> modules,
-			ArrayList<Double> moduleWeights, int beamSize, URL wordFileURL,
-			URL synDirURL, URL paraDirURL,
+			ArrayList<Double> moduleWeights, int beamSize, URL stemFileURL,
+			URL wordFileURL, URL synDirURL, URL paraDirURL,
 			Comparator<PartialAlignment> partialComparator) {
 		this.beamSize = beamSize;
 		this.partialComparator = partialComparator;
-		setupModules(language, modules, wordFileURL, synDirURL, paraDirURL);
+		setupModules(language, modules, stemFileURL, wordFileURL, synDirURL, paraDirURL);
 		this.moduleWeights = moduleWeights;
 	}
 
@@ -136,7 +83,7 @@ public class Aligner {
 	}
 
 	private void setupModules(String language, ArrayList<Integer> modules,
-			URL wordFileURL, URL synDirURL, URL paraDirURL) {
+			URL stemFileURL, URL wordFileURL, URL synDirURL, URL paraDirURL) {
 		this.language = Constants.normLanguageName(language);
 		this.moduleCount = modules.size();
 		this.modules = modules;
@@ -147,7 +94,7 @@ public class Aligner {
 				this.moduleWeights.add(Constants.DEFAULT_WEIGHT_EXACT);
 			} else if (module == Constants.MODULE_STEM) {
 				this.moduleWeights.add(Constants.DEFAULT_WEIGHT_STEM);
-				this.stemmer = Constants.newStemmer(this.language);
+				this.stemmer = Constants.newStemmer(this.language, stemFileURL);
 			} else if (module == Constants.MODULE_SYNONYM) {
 				this.moduleWeights.add(Constants.DEFAULT_WEIGHT_SYNONYM);
 				try {

@@ -44,6 +44,7 @@ public class MeteorConfiguration {
 	private ArrayList<Integer> modules;
 	private ArrayList<Double> moduleWeights;
 	private int beamSize;
+	private URL stemFileURL;
 	private URL wordFileURL;
 	private URL synDirURL;
 	private URL paraDirURL;
@@ -209,6 +210,20 @@ public class MeteorConfiguration {
 		this.moduleWeights = new ArrayList<Double>(moduleScores);
 	}
 
+	public URL getStemFileURL() {
+		return stemFileURL;
+	}
+
+	public void setStemFileURL(URL stemFileURL) {
+		try {
+			// This should not ever throw a malformed url exception
+			this.stemFileURL = new URL(stemFileURL.toString());
+		} catch (MalformedURLException ex) {
+			System.err.println("Error: Stem file URL NOT set");
+			ex.printStackTrace();
+		}
+	}
+
 	public URL getWordFileURL() {
 		return wordFileURL;
 	}
@@ -341,6 +356,17 @@ public class MeteorConfiguration {
 		String beamSize = props.getProperty("beamSize");
 		if (beamSize != null)
 			setBeamSize(Integer.parseInt(beamSize));
+
+		// Stem file
+		String stemFile = (props.getProperty("stemFile"));
+		if (stemFile != null)
+			try {
+				// This should not ever throw a malformed url exception
+				setStemFileURL((new File(stemFile)).toURI().toURL());
+			} catch (MalformedURLException ex) {
+				System.err.println("Error: Stem file URL NOT set");
+				ex.printStackTrace();
+			}
 
 		// Word list file
 		String wordFile = (props.getProperty("wordFile"));

@@ -45,6 +45,8 @@ public class Matcher {
 			System.out
 					.println("-x beamSize                     Keep speed reasonable");
 			System.out
+					.println("-e stemFile                     (if not default)");
+			System.out
 					.println("-d synonymDirectory             (if not default)");
 			System.out
 					.println("-a paraphraseFile               (if not default)");
@@ -75,6 +77,9 @@ public class Matcher {
 			} else if (args[curArg].equals("-x")) {
 				props.setProperty("beamSize", args[curArg + 1]);
 				curArg += 2;
+			} else if (args[curArg].equals("-e")) {
+				props.setProperty("stemFile", args[curArg + 1]);
+				curArg += 2;
 			} else if (args[curArg].equals("-d")) {
 				props.setProperty("synDir", args[curArg + 1]);
 				curArg += 2;
@@ -101,6 +106,12 @@ public class Matcher {
 		if (language == null)
 			language = "english";
 		language = Constants.normLanguageName(language);
+
+		// Stem file
+		String stemFile = props.getProperty("stemFile");
+		URL stemFileURL = null;
+		if (stemFile != null)
+			stemFileURL = (new File(stemFile)).toURI().toURL();
 
 		// Synonym Location
 		String synDir = props.getProperty("synDir");
@@ -173,7 +184,7 @@ public class Matcher {
 
 		// Construct aligner
 		Aligner aligner = new Aligner(language, modules, moduleWeights,
-				beamSize, Constants.getDefaultWordFileURL(Constants
+				beamSize, stemFileURL, Constants.getDefaultWordFileURL(Constants
 						.getLanguageID(language)), synURL, paraURL,
 				partialComparator);
 
