@@ -39,8 +39,12 @@ public class Parex {
 			minFinalProb = Double.parseDouble(args[7]);
 		// Symbol String
 		String symbols = ParaphraseExtractor.SYMBOLS;
-		if (args.length > 8)
+		String[] bigSymbolString = ParaphraseExtractor.BIG_SYMBOLS;
+		if (args.length > 8) {
 			symbols = args[8];
+			// TODO: specify big symbols on command line
+			bigSymbolString = new String[0];
+		}
 
 		// Setup
 		if (outDir.exists()) {
@@ -64,7 +68,7 @@ public class Parex {
 		System.err.println("Step 2: extracting paraphrases");
 		String raw = outPrefix + ".raw.gz";
 		ParaphraseExtractor.extractParaphrases(eTgtCorpus, pt, fCommon,
-				eCommon, raw, minPhraseProb, symbols);
+				eCommon, raw, minPhraseProb, symbols, bigSymbolString);
 
 		// Step 3: Group paraphrases
 		System.err.println("Step 3: grouping paraphrases");

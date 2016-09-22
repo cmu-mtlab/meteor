@@ -27,6 +27,7 @@ public class ParaphraseExtractor {
 	public static final double MIN_FINAL_PROB = 0.01;
 
 	public static final String SYMBOLS = "~`!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?";
+	public static final String[] BIG_SYMBOLS = {"&amp;", "&quot;", "&apos;", "&gt;", "&lt;", "@-@"};
 
 	// Check if phrase contains any common words
 	private static boolean isClean(int[] words, HashSet<Integer> commons) {
@@ -57,7 +58,8 @@ public class ParaphraseExtractor {
 	// Paraphrasing via pivot approach
 	public static void extractParaphrases(String targetCorpusFile,
 			String phrasetableFile, String fCommonFile, String eCommonFile,
-			String outFile, double minTransProb, String symbolString)
+			String outFile, double minTransProb, String symbolString,
+			String[] bigSymbolStrings)
 			throws IOException {
 
 		// Table stores (pivot, reference, p(piv|ref))
@@ -68,6 +70,8 @@ public class ParaphraseExtractor {
 		HashSet<Integer> symbols = new HashSet<Integer>();
 		for (int i = 0; i < symbolString.length(); i++)
 			symbols.add(pt.mapWord(symbolString.substring(i, i + 1)));
+		for (String big : bigSymbolStrings)
+			symbols.add(pt.mapWord(big));
 
 		// Load corpus
 		System.err.println("Loading corpus");
