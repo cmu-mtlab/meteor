@@ -28,6 +28,14 @@ public class ParaphraseExtractor {
 
 	public static final String SYMBOLS = "~`!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?";
 
+	// Check if phrase contains any common words
+	private static boolean isClean(int[] words, HashSet<Integer> commons) {
+		for (int word : words)
+			if (commons.contains(word))
+				return false;
+		return true;
+	}
+
 	// Check if phrase contains at least one uncommon word
 	private static boolean isUsable(int[] words, HashSet<Integer> commons) {
 		for (int word : words)
@@ -135,7 +143,7 @@ public class ParaphraseExtractor {
 				int[] piv1 = pt.mapPhrase(pivot1);
 
 				// Vacuum phrases with symbols
-				if (!isUsable(p1, symbols) || !isUsable(piv1, symbols)) {
+				if (!isClean(p1, symbols) || !isClean(piv1, symbols)) {
 					continue;
 				}
 
@@ -211,7 +219,7 @@ public class ParaphraseExtractor {
 				int[] piv2 = pt.mapPhrase(pivot2);
 
 				// Vacuum phrases with symbols
-				if (!isUsable(p2, symbols) || !isUsable(piv2, symbols))
+				if (!isClean(p2, symbols) || !isClean(piv2, symbols))
 					continue;
 
 				// Vacuum phrases with only common words
