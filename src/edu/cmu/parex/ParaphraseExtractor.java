@@ -28,14 +28,6 @@ public class ParaphraseExtractor {
 
 	public static final String SYMBOLS = "~`!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?";
 
-	// Check if phrase is clean of symbols
-	private static boolean isClean(String s, HashSet<Character> symbols) {
-		for (int i = 0; i < s.length(); i++)
-			if (symbols.contains(s.charAt(i)))
-				return false;
-		return true;
-	}
-
 	// Check if phrase contains at least one uncommon word
 	private static boolean isUsable(int[] words, HashSet<Integer> commons) {
 		for (int word : words)
@@ -65,9 +57,9 @@ public class ParaphraseExtractor {
 		PhraseTable pt = new PhraseTable();
 
 		Hashtable<Integer, Hashtable> corpus = new Hashtable<Integer, Hashtable>();
-		HashSet<Character> symbols = new HashSet<Character>();
+		HashSet<Integer> symbols = new HashSet<Integer>();
 		for (int i = 0; i < symbolString.length(); i++)
-			symbols.add(symbolString.charAt(i));
+			symbols.add(pt.mapWord(symbolString.substring(i, i + 1)));
 
 		// Load corpus
 		System.err.println("Loading corpus");
@@ -139,13 +131,13 @@ public class ParaphraseExtractor {
 				if (prob < minTransProb)
 					continue;
 
-				// Vacuum phrases with symbols
-				if (!isClean(phrase1, symbols) || !isClean(pivot1, symbols)) {
-					continue;
-				}
-
 				int[] p1 = pt.mapPhrase(phrase1);
 				int[] piv1 = pt.mapPhrase(pivot1);
+
+				// Vacuum phrases with symbols
+				if (!isUsable(p1, symbols) || !isUsable(piv1, symbols)) {
+					continue;
+				}
 
 				// Vacuum phrases with only common words
 				if (!isUsable(p1, p1commons) || !isUsable(piv1, piv1commons)) {
@@ -215,12 +207,12 @@ public class ParaphraseExtractor {
 				if (prob < minTransProb)
 					continue;
 
-				// Vacuum phrases with symbols
-				if (!isClean(phrase2, symbols) || !isClean(pivot2, symbols))
-					continue;
-
 				int[] p2 = pt.mapPhrase(phrase2);
 				int[] piv2 = pt.mapPhrase(pivot2);
+
+				// Vacuum phrases with symbols
+				if (!isUsable(p2, symbols) || !isUsable(piv2, symbols))
+					continue;
 
 				// Vacuum phrases with only common words
 				if (!isUsable(p2, p2commons) || !isUsable(piv2, piv2commons)) {

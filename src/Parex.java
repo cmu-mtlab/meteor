@@ -36,7 +36,7 @@ public class Parex {
 		// Minimum final probability
 		double minFinalProb = ParaphraseExtractor.MIN_FINAL_PROB;
 		if (args.length > 7)
-			minRF = Double.parseDouble(args[7]);
+			minFinalProb = Double.parseDouble(args[7]);
 		// Symbol String
 		String symbols = ParaphraseExtractor.SYMBOLS;
 		if (args.length > 8)
